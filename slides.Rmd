@@ -1,5 +1,5 @@
 ---
-title: "<br><br>Growing a book in the open"
+title: "Growing a book in the open"
 subtitle: "from blog post to O'Reilly paperback"
 author: "<br>Julia Silge | IBM Community Day: AI"
 output:
