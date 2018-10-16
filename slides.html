@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>  Growing a book in the open</title>
+    <meta charset="utf-8">
+    <meta name="author" content=" Julia Silge | IBM Community Day: AI" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/5235085b15.js"></script>
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="css/footer_plus.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+layout: true
+
+&lt;div class="my-footer"&gt;&lt;span&gt;bit.ly/silge-so-offsite-2018&lt;/span&gt;&lt;/div&gt; 
+
+---
+
+class: center, middle
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+&lt;img src="figs/so-logo.svg" width="30%"/&gt;
+
+# **Growing a book in the open**
+
+### FROM BLOG POST TO O'REILLY PAPERBACK
+
+.large[**Julia Silge | Stack Overflow offsite**]
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# In early 2016...
+
+--
+
+- .large[I was interested in this so-called "data science"]
+
+--
+
+- .large[I was pretty sure no one would hire me]
+
+--
+
+- .large[I needed a ✨portfolio✨]
+
+---
+
+background-image: url(figs/prideandprejudice.gif)
+background-size: 800px
+background-position: 50% 50%
+
+# Write what you know
+
+---
+
+class: center, middle
+
+background-image: url("figs/blog_screenshot.png")
+
+---
+class: left
+
+background-image: url(figs/austen_heatmap.png)
+background-size: 1000px
+background-position: 50% 60%
+
+# Text mining and Jane Austen
+
+---
+
+class: center, middle
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+# In July 2017...
+
+---
+
+class:center, middle
+
+background-image: url(figs/cover.png)
+background-size: 450px
+
+---
+
+class:center, middle
+
+background-image: url(figs/ropensci_tweet.png)
+background-size: 700px
+
+---
+
+# Unnest tokens to tidy text
+
+
+```r
+library(tidytext)
+
+tidy_books &lt;- janeaustenr::austen_books() %&gt;%
+  unnest_tokens(word, text) 
+
+tidy_books %&gt;%
+  anti_join(stop_words) %&gt;%
+  count(word, sort = TRUE)
+```
+
+```
+## # A tibble: 13,914 x 2
+##    word       n
+##    &lt;chr&gt;  &lt;int&gt;
+##  1 miss    1855
+##  2 time    1337
+##  3 fanny    862
+##  4 dear     822
+##  5 lady     817
+##  6 sir      806
+##  7 day      797
+##  8 emma     787
+##  9 sister   727
+## 10 house    699
+## # ... with 13,904 more rows
+```
+---
+
+# Tidy a document-term matrix
+
+
+
+
+
+```r
+comparison &lt;- tidy(AssociatedPress) %&gt;%
+  count(word = term) %&gt;%
+  rename(AP = n) %&gt;%
+  inner_join(count(tidy_books, word)) %&gt;%
+  rename(Austen = n) %&gt;%
+  mutate(AP = AP / sum(AP),
+         Austen = Austen / sum(Austen))
+
+comparison
+```
+
+```
+## # A tibble: 4,735 x 3
+##    word             AP     Austen
+##    &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt;
+##  1 abandoned 0.000169  0.00000461
+##  2 abide     0.0000289 0.0000184 
+##  3 abilities 0.0000289 0.000134  
+##  4 ability   0.000236  0.0000138 
+##  5 able      0.000661  0.00141   
+##  6 abroad    0.000193  0.000166  
+##  7 abrupt    0.0000289 0.0000230 
+##  8 absence   0.0000772 0.000511  
+##  9 absent    0.0000434 0.000230  
+## 10 absolute  0.0000531 0.000120  
+## # ... with 4,725 more rows
+```
+
+---
+
+![](slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+
+---
+
+class: center, middle
+
+background-image: url(figs/tidytext_repo.png)
+background-size: 1000px
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+---
+
+background-image: url(figs/heatedblogs.gif)
+background-size: 500px
+background-position: 50% 50%
+
+# Blogging
+
+---
+
+# Blogging
+
+- .large[Nobody is going to stop you from blogging about technical topics] 
+
+---
+
+background-image: url(figs/saynotohorse.gif)
+background-size: 400px
+background-position: 50% 50%
+
+# Blogging
+
+---
+
+# Blogging
+
+- .large[Nobody is going to stop you from blogging about technical topics] 
+
+--
+
+- .large[Blogging allows you to **practice** relevant skills]
+
+--
+
+- .large[Blogging offers opportunities for **community** and **feedback**]
+
+---
+
+class:center, middle
+
+background-image: url(figs/cover_bookdown.jpg)
+background-size: 400px
+
+---
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+--
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+---
+
+
+background-image: url(figs/writing_life.jpg)
+background-size: 300px
+background-position: 18% 60%
+
+## Writing advice from Annie Dillard
+
+---
+class: right
+
+&lt;h1 class="fa fa-quote-left fa-fw"&gt;&lt;/h1&gt;
+
+.large[**One of the things I know about writing is this: spend it all, shoot it, play it, lose it, all, right away, every time.**]
+
+--
+
+.large[**Do not hoard what seems good for a later place in the book or for another book; give it, give it all, give it now.**]
+
+--
+
+&lt;h2&gt; The impulse to save something good for a better place later is the signal to spend it now. &lt;/h2&gt;
+
+&lt;h1 class="fa fa-quote-right fa-fw"&gt;&lt;/h1&gt;
+
+---
+
+class: right
+
+&lt;h1 class="fa fa-quote-left fa-fw"&gt;&lt;/h1&gt; 
+
+
+.large[**Similarly, the impulse to keep to yourself what you have learned is not only shameful, it is destructive.**]
+
+--
+
+&lt;h2&gt; Anything you do not give freely and abundantly becomes lost to you. You open your safe and find ashes. &lt;/h2&gt;
+
+&lt;h1 class="fa fa-quote-right fa-fw"&gt;&lt;/h1&gt;
+---
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+class: center, middle
+
+# **Collaboration**
+
+---
+
+background-image: url(figs/collab_tweet.png)
+background-size: 400px
+background-position: 50% 50%
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+--
+
+- .large[**December 2016** signed agreement with O'Reilly]
+
+---
+
+# Why publish a book?
+
+---
+
+background-image: url(figs/money.gif)
+background-size: 500px
+background-position: 50% 50%
+
+
+# Why publish a book?
+
+---
+
+# Why publish a book?
+
+- .large[A technical book is **not** the most lucrative side project you can embark on]
+
+--
+
+- .large[The gravitas of a "real" publisher may or may not be the right fit any individual]
+
+---
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+class: center, middle
+
+# **Then we had to actually submit a book**
+
+---
+
+class: bottom, right
+
+background-image: url(figs/yihui_simple.png)
+background-size: 800px
+
+Advice from [Yihui Xie](https://yihui.name/en/2018/07/r-markdown-book/)
+
+---
+
+background-image: url(figs/darkness.png)
+background-size: 400px
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+- .large[**December 2016** signed agreement with O'Reilly]
+
+- .large[**April 2017** submitted final draft to O'Reilly]
+
+--
+
+- .large[**July 2017** book published 🎉]
+
+---
+
+class: left, middle
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+&lt;img src="figs/so-icon.svg" width="15%"/&gt;
+
+# Thanks!
+
+&lt;a href="http://twitter.com/juliasilge"&gt;&lt;i class="fa fa-twitter fa-fw"&gt;&lt;/i&gt;&amp;nbsp; @juliasilge&lt;/a&gt;&lt;br&gt;
+&lt;a href="http://github.com/juliasilge"&gt;&lt;i class="fa fa-github fa-fw"&gt;&lt;/i&gt;&amp;nbsp; @juliasilge&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://juliasilge.com"&gt;&lt;i class="fa fa-link fa-fw"&gt;&lt;/i&gt;&amp;nbsp; juliasilge.com&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://tidytextmining.com"&gt;&lt;i class="fa fa-book fa-fw"&gt;&lt;/i&gt;&amp;nbsp; tidytextmining.com&lt;/a&gt;&lt;br&gt;
+&lt;a href="mailto:julia.silge@gmail.com"&gt;&lt;i class="fa fa-paper-plane fa-fw"&gt;&lt;/i&gt;&amp;nbsp; julia.silge@gmail.com&lt;/a&gt;
+
+Slides created with [remark.js](http://remarkjs.com/) and the R package [**xaringan**](https://github.com/yihui/xaringan)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

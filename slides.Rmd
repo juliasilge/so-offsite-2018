@@ -1,0 +1,401 @@
+---
+title: "<br><br>Growing a book in the open"
+subtitle: "from blog post to O'Reilly paperback"
+author: "<br>Julia Silge | IBM Community Day: AI"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css", "css/footer_plus.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    seal: false
+    includes:
+      in_header: header.html
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(tidytext)
+library(janeaustenr)
+library(knitr)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      dpi = 300, cache.lazy = FALSE,
+                      fig.cap = "")
+theme_set(silgelib::theme_plex())
+```
+
+layout: true
+
+<div class="my-footer"><span>bit.ly/silge-so-offsite-2018</span></div> 
+
+---
+
+class: center, middle
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+<img src="figs/so-logo.svg" width="30%"/>
+
+# **Growing a book in the open**
+
+### FROM BLOG POST TO O'REILLY PAPERBACK
+
+.large[**Julia Silge | Stack Overflow offsite**]
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# In early 2016...
+
+--
+
+- .large[I was interested in this so-called "data science"]
+
+--
+
+- .large[I was pretty sure no one would hire me]
+
+--
+
+- .large[I needed a `r emo::ji("sparkles")`portfolio`r emo::ji("sparkles")`]
+
+---
+
+background-image: url(figs/prideandprejudice.gif)
+background-size: 800px
+background-position: 50% 50%
+
+# Write what you know
+
+---
+
+class: center, middle
+
+background-image: url("figs/blog_screenshot.png")
+
+---
+class: left
+
+background-image: url(figs/austen_heatmap.png)
+background-size: 1000px
+background-position: 50% 60%
+
+# Text mining and Jane Austen
+
+---
+
+class: center, middle
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+# In July 2017...
+
+---
+
+class:center, middle
+
+background-image: url(figs/cover.png)
+background-size: 450px
+
+---
+
+class:center, middle
+
+background-image: url(figs/ropensci_tweet.png)
+background-size: 700px
+
+---
+
+# Unnest tokens to tidy text
+
+```{r}
+library(tidytext)
+
+tidy_books <- janeaustenr::austen_books() %>%
+  unnest_tokens(word, text) 
+
+tidy_books %>%
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE)
+```
+---
+
+# Tidy a document-term matrix
+
+```{r echo=FALSE}
+library(tm)
+data("AssociatedPress", package = "topicmodels")
+```
+
+
+```{r}
+comparison <- tidy(AssociatedPress) %>%
+  count(word = term) %>%
+  rename(AP = n) %>%
+  inner_join(count(tidy_books, word)) %>%
+  rename(Austen = n) %>%
+  mutate(AP = AP / sum(AP),
+         Austen = Austen / sum(Austen))
+
+comparison
+```
+
+---
+
+```{r, echo=FALSE, fig.height=4.2}
+comparison %>%
+  anti_join(get_stopwords()) %>%
+  ggplot(aes(AP, Austen)) +
+  geom_point(alpha = 0.5) +
+  geom_text(aes(label = word), check_overlap = TRUE,
+            vjust = 1, hjust = 1, family = "IBMPlexSans") +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::percent_format()) +
+  geom_abline(color = "red")
+```
+
+
+---
+
+class: center, middle
+
+background-image: url(figs/tidytext_repo.png)
+background-size: 1000px
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+---
+
+background-image: url(figs/heatedblogs.gif)
+background-size: 500px
+background-position: 50% 50%
+
+# Blogging
+
+---
+
+# Blogging
+
+- .large[Nobody is going to stop you from blogging about technical topics] 
+
+---
+
+background-image: url(figs/saynotohorse.gif)
+background-size: 400px
+background-position: 50% 50%
+
+# Blogging
+
+---
+
+# Blogging
+
+- .large[Nobody is going to stop you from blogging about technical topics] 
+
+--
+
+- .large[Blogging allows you to **practice** relevant skills]
+
+--
+
+- .large[Blogging offers opportunities for **community** and **feedback**]
+
+---
+
+class:center, middle
+
+background-image: url(figs/cover_bookdown.jpg)
+background-size: 400px
+
+---
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+--
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+---
+
+
+background-image: url(figs/writing_life.jpg)
+background-size: 300px
+background-position: 18% 60%
+
+## Writing advice from Annie Dillard
+
+---
+class: right
+
+<h1 class="fa fa-quote-left fa-fw"></h1>
+
+.large[**One of the things I know about writing is this: spend it all, shoot it, play it, lose it, all, right away, every time.**]
+
+--
+
+.large[**Do not hoard what seems good for a later place in the book or for another book; give it, give it all, give it now.**]
+
+--
+
+<h2> The impulse to save something good for a better place later is the signal to spend it now. </h2>
+
+<h1 class="fa fa-quote-right fa-fw"></h1>
+
+---
+
+class: right
+
+<h1 class="fa fa-quote-left fa-fw"></h1> 
+
+
+.large[**Similarly, the impulse to keep to yourself what you have learned is not only shameful, it is destructive.**]
+
+--
+
+<h2> Anything you do not give freely and abundantly becomes lost to you. You open your safe and find ashes. </h2>
+
+<h1 class="fa fa-quote-right fa-fw"></h1>
+---
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+class: center, middle
+
+# **Collaboration**
+
+---
+
+background-image: url(figs/collab_tweet.png)
+background-size: 400px
+background-position: 50% 50%
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+--
+
+- .large[**December 2016** signed agreement with O'Reilly]
+
+---
+
+# Why publish a book?
+
+---
+
+background-image: url(figs/money.gif)
+background-size: 500px
+background-position: 50% 50%
+
+
+# Why publish a book?
+
+---
+
+# Why publish a book?
+
+- .large[A technical book is **not** the most lucrative side project you can embark on]
+
+--
+
+- .large[The gravitas of a "real" publisher may or may not be the right fit any individual]
+
+---
+
+background-image: url(figs/white_title.svg)
+background-size: cover
+
+class: center, middle
+
+# **Then we had to actually submit a book**
+
+---
+
+class: bottom, right
+
+background-image: url(figs/yihui_simple.png)
+background-size: 800px
+
+Advice from [Yihui Xie](https://yihui.name/en/2018/07/r-markdown-book/)
+
+---
+
+background-image: url(figs/darkness.png)
+background-size: 400px
+
+---
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+# Growing a book in the open
+
+- .large[**March 2016** initial blog post]
+
+- .large[**April 2016** rOpenSci unconf, the beginning of tidytext, tidytext on CRAN]
+
+- .large[**July 2016** bookdown repo started]
+
+- .large[**October 2016** we announced *Tidy Text Mining with R*]
+
+- .large[**December 2016** signed agreement with O'Reilly]
+
+- .large[**April 2017** submitted final draft to O'Reilly]
+
+--
+
+- .large[**July 2017** book published `r emo::ji("tada")`]
+
+---
+
+class: left, middle
+
+background-image: url(figs/white_bg.svg)
+background-size: cover
+
+<img src="figs/so-icon.svg" width="15%"/>
+
+# Thanks!
+
+<a href="http://twitter.com/juliasilge"><i class="fa fa-twitter fa-fw"></i>&nbsp; @juliasilge</a><br>
+<a href="http://github.com/juliasilge"><i class="fa fa-github fa-fw"></i>&nbsp; @juliasilge</a><br>
+<a href="https://juliasilge.com"><i class="fa fa-link fa-fw"></i>&nbsp; juliasilge.com</a><br>
+<a href="https://tidytextmining.com"><i class="fa fa-book fa-fw"></i>&nbsp; tidytextmining.com</a><br>
+<a href="mailto:julia.silge@gmail.com"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; julia.silge@gmail.com</a>
+
+Slides created with [remark.js](http://remarkjs.com/) and the R package [**xaringan**](https://github.com/yihui/xaringan)
