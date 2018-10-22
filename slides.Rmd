@@ -1,7 +1,7 @@
 ---
 title: "Growing a book in the open"
 subtitle: "from blog post to O'Reilly paperback"
-author: "<br>Julia Silge | IBM Community Day: AI"
+author: "Julia Silge"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css", "css/footer_plus.css"]
